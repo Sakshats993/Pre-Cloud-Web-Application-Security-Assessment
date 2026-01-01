@@ -1,3 +1,4 @@
+![Status](https://img.shields.io/badge/Project-Completed-brightgreen)
 # 🛡️ Pre-Cloud Web Application Security Assessment
 
 ## 📌 Overview
@@ -89,6 +90,31 @@ Recommendations are provided at multiple levels:
 
 ---
 
+## Threat Model Summary
+
+### Primary Threat Actors
+- External attackers
+- Automated bots
+- Malicious authenticated users
+
+### Key Attack Vectors
+- Injection attacks (SQLi, command injection)
+- Authentication bypass
+- Insecure file uploads
+- Excessive permissions
+
+### High-Value Assets
+- User credentials
+- Personally Identifiable Information (PII)
+- Application source logic
+- Backend infrastructure
+
+### Trust Boundaries
+- Internet → WAF
+- WAF → Application
+- Application → Database
+- Application → Object Storage
+
 ## ☁️ Cloud Security Mapping
 Each vulnerability is mapped to **cloud-native mitigation strategies**, such as:
 
@@ -130,13 +156,31 @@ Optional setup for testing:
 - Analyze and document findings
 
 ---
+## Future Improvements
 
-## 🚫 Limitations
-- Testing performed only on intentionally vulnerable applications  
-- No exploitation or real-world attack simulation  
-- Results may differ in production-grade environments  
+- Integrate SAST and dependency scanning (Snyk, Semgrep)
+- Add container security scanning
+- Implement CI/CD security gates
+- Expand cloud security mapping for Azure and GCP
+- Perform authenticated scanning and role-based testing
+
+
+## Assumptions & Limitations
+
+- Testing performed in an isolated lab environment
+- No denial-of-service testing conducted
+- Cloud deployment simulated, not production
+- Findings based on time-boxed assessment
 
 ---
+
+## Key Takeaways
+
+- Performed a full pre-cloud security assessment combining automated scanning and manual validation
+- Identified and triaged vulnerabilities using OWASP Top 10 and CVSS
+- Demonstrated defense-in-depth by combining application fixes with cloud-native controls
+- Mapped application risks to AWS security services (WAF, IAM, Secrets Manager, Monitoring)
+- Highlighted limitations of automated tools through false-positive analysis
 
 ## 📄 Disclaimer
 This project is created **strictly for educational and portfolio purposes**.
