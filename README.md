@@ -99,15 +99,18 @@ Each vulnerability is mapped to **cloud-native mitigation strategies**, such as:
 This demonstrates how addressing issues early improves **cloud security posture**.
 
 ## Architecture Overview
+
+```mermaid
 flowchart TB
     User[End User / Attacker]
     Internet[Internet]
     WAF[Web Application Firewall]
     APIGW[API Gateway / Load Balancer]
-    App[Web Application\n(Node.js / Express)]
+    App[Web Application<br/>Node.js / Express]
     DB[(Database)]
     Storage[(Object Storage)]
     Logs[Logging & Monitoring]
+
     User --> Internet
     Internet --> WAF
     WAF --> APIGW
@@ -117,7 +120,7 @@ flowchart TB
     App --> Logs
     WAF --> Logs
     APIGW --> Logs
-
+``` 
 ## ⚙️ Setup (Optional – Lab Environment)
 This project does not require custom code execution.
 
