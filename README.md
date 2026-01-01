@@ -96,9 +96,27 @@ Each vulnerability is mapped to **cloud-native mitigation strategies**, such as:
 - Secure access control and identity management  
 - Network exposure reduction  
 - Secure deployment best practices  
-
 This demonstrates how addressing issues early improves **cloud security posture**.
 
+## Architecture Overview
+flowchart TB
+    User[End User / Attacker]
+    Internet[Internet]
+    WAF[Web Application Firewall]
+    APIGW[API Gateway / Load Balancer]
+    App[Web Application\n(Node.js / Express)]
+    DB[(Database)]
+    Storage[(Object Storage)]
+    Logs[Logging & Monitoring]
+    User --> Internet
+    Internet --> WAF
+    WAF --> APIGW
+    APIGW --> App
+    App --> DB
+    App --> Storage
+    App --> Logs
+    WAF --> Logs
+    APIGW --> Logs
 
 ## ⚙️ Setup (Optional – Lab Environment)
 This project does not require custom code execution.
