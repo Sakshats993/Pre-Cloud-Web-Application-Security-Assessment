@@ -1,0 +1,98 @@
+# CloudWatch Dashboard Configuration for Pre-Cloud Security Monitoring
+
+dashboardName: PreCloudSecurityDashboard
+
+widgets:
+  - type: metric
+    properties:
+      title: "WAF Blocked Requests"
+      view: timeSeries
+      region: us-east-1
+      period: 300
+      metrics:
+        - namespace: AWS/WAFV2
+          metricName: BlockedRequests
+          dimensions:
+            WebACL: pre-cloud-security-waf
+          stat: Sum
+
+  - type: metric
+    properties:
+      title: "Application Response Time"
+      view: timeSeries
+      region: us-east-1
+      period: 60
+      metrics:
+        - namespace: AWS/ApplicationELB
+          metricName: TargetResponseTime
+          dimensions:
+            LoadBalancer: app/pre-cloud-app-lb
+          stat: Average
+
+  - type: metric
+    properties:
+      title: "Failed Login Attempts"
+      view: singleValue
+      region: us-east-1
+      period: 300
+      metrics:
+        - namespace: CustomApplication
+          metricName: FailedLogins
+          stat: Sum
+
+  - type: metric
+    properties:
+      title: "SQL Injection Attempts Detected"
+      view: timeSeries
+      region: us-east-1
+      period: 300
+      metrics:
+        - namespace: AWS/WAFV2
+          metricName: CountedRequests
+          dimensions:
+            Rule: SQLiProtectionRule
+          stat: Sum
+
+  - type: metric
+    properties:
+      title: "High Request Rate (Potential DDoS)"
+      view: timeSeries
+      region: us-east-1
+      period: 60
+      metrics:
+        - namespace: AWS/ApplicationELB
+          metricName: RequestCount
+          dimensions:
+            LoadBalancer: app/pre-cloud-app-lb
+          stat: Sum
+
+alarms:
+  - alarmName: HighWAFBlockedRequests
+    description: "Alert when WAF blocks excessive requests"
+    metricName: BlockedRequests
+    namespace: AWS/WAFV2
+    statistic: Sum
+    period: 300
+    evaluationPeriods: 2
+    threshold: 100
+    comparisonOperator: GreaterThanThreshold
+
+  - alarmName: ExcessiveFailedLogins
+    description: "Alert on high number of failed login attempts"
+    metricName: FailedLogins
+    namespace: CustomApplication
+    statistic: Sum
+    period: 300
+    evaluationPeriods: 2
+    threshold: 50
+    comparisonOperator: GreaterThanThreshold
+
+  - alarmName: HighResponseTime
+    description: "Alert when application response time is too high"
+    metricName: TargetResponseTime
+    namespace: AWS/ApplicationELB
+    statistic: Average
+    period: 60
+    evaluationPeriods: 3
+    threshold: 2
+    comparisonOperator: GreaterThanThreshold
