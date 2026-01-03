@@ -1,6 +1,24 @@
 ![Status](https://img.shields.io/badge/Project-Completed-brightgreen)
 # 🛡️ Pre-Cloud Web Application Security Assessment
 
+## 📌 Table of Contents
+- [Overview](#-overview)
+- [Project Objectives](#-project-objectives)
+- [Technologies Involved](#-technologies-involved)
+- [Tools Used](#-tools-used)
+- [Methodology](#-methodology)
+- [Key Findings](#-key-findings)
+- [Threat Model Summary](#threat-model-summary)
+- [Cloud Security Mapping](#-cloud-security-mapping)
+- [Architecture Overview](#architecture-overview)
+- [Setup](#-setup-optional--lab-environment)
+- [Future Improvements](#future-improvements)
+- [Assumptions & Limitations](#assumptions--limitations)
+- [Key Takeaways](#key-takeaways)
+- [Disclaimer](#-disclaimer)
+- [Author](#-author)
+
+
 ## 📌 Overview
 This project presents a **web vulnerability scanning and security assessment report** focused on identifying risks **before deploying an application to a cloud environment**.  
 The objective is to adopt a **shift-left security approach**, ensuring that common web application vulnerabilities and misconfigurations are addressed early to reduce cloud attack surfaces.
@@ -63,9 +81,32 @@ The assessment follows a structured security testing approach:
 
 ---
 
-## 📊 Key Findings
-The vulnerabilities identified are mapped to the **OWASP Top 10**, including but not limited to:
+## Architecture Overview
 
+```mermaid
+flowchart TB
+    User[End User / Attacker]
+    Internet[Internet]
+    WAF[Web Application Firewall]
+    APIGW[API Gateway / Load Balancer]
+    App[Web Application<br/>Node.js / Express]
+    DB[(Database)]
+    Storage[(Object Storage)]
+    Logs[Logging & Monitoring]
+
+    User --> Internet
+    Internet --> WAF
+    WAF --> APIGW
+    APIGW --> App
+    App --> DB
+    App --> Storage
+    App --> Logs
+    WAF --> Logs
+    APIGW --> Logs
+```
+
+## 📊 Key Findings
+The assessment identified multiple vulnerabilities aligned with the **OWASP Top 10**, including:
 - SQL Injection  
 - Cross-Site Scripting (XSS)  
 - Broken Authentication  
@@ -79,6 +120,28 @@ Each finding includes:
 - Technical impact  
 
 ---
+
+## 📂 Detailed Assessment Artifacts
+
+### Findings
+- Critical Vulnerabilities: [findings/Critical_Vulnerabilities.md](findings/Critical_Vulnerabilities.md)
+- High Risk Findings: [findings/High_Risk_Findings.md](findings/High_Risk_Findings.md)
+- Medium Risk Findings: [findings/Medium_Risk_Findings.md](findings/Medium_Risk_Findings.md)
+- Low Risk Findings: [findings/Low_Risk_Findings.md](findings/Low_Risk_Findings.md)
+
+### Scan Results
+- OWASP ZAP: [scan-results/OWASP_ZAP_Scan_Results.md](scan-results/OWASP_ZAP_Scan_Results.md)
+- Nikto: [scan-results/Nikto_Scan_Output.md](scan-results/Nikto_Scan_Output.md)
+- Burp Suite: [scan-results/Burp_Suite_Findings.md](scan-results/Burp_Suite_Findings.md)
+- Nmap: [scan-results/Nmap_Service_Discovery.md](scan-results/Nmap_Service_Discovery.md)
+
+### Reports & Remediation
+- Executive Summary: [reports/Executive_Summary.md](reports/Executive_Summary.md)
+- Full Assessment Report: [reports/Full_Security_Assessment_Report.md](reports/Full_Security_Assessment_Report.md)
+- Vulnerability Details: [reports/Vulnerability_Details.md](reports/Vulnerability_Details.md)
+- Application Fixes: [remediation/Application_Level_Fixes.md](remediation/Application_Level_Fixes.md)
+- Configuration Hardening: [remediation/Configuration_Hardening.md](remediation/Configuration_Hardening.md)
+
 
 ## 🛠️ Recommendations
 Recommendations are provided at multiple levels:
@@ -124,29 +187,6 @@ Each vulnerability is mapped to **cloud-native mitigation strategies**, such as:
 - Secure deployment best practices  
 This demonstrates how addressing issues early improves **cloud security posture**.
 
-## Architecture Overview
-
-```mermaid
-flowchart TB
-    User[End User / Attacker]
-    Internet[Internet]
-    WAF[Web Application Firewall]
-    APIGW[API Gateway / Load Balancer]
-    App[Web Application<br/>Node.js / Express]
-    DB[(Database)]
-    Storage[(Object Storage)]
-    Logs[Logging & Monitoring]
-
-    User --> Internet
-    Internet --> WAF
-    WAF --> APIGW
-    APIGW --> App
-    App --> DB
-    App --> Storage
-    App --> Logs
-    WAF --> Logs
-    APIGW --> Logs
-``` 
 ## ⚙️ Setup (Optional – Lab Environment)
 This project does not require custom code execution.
 
@@ -155,7 +195,56 @@ Optional setup for testing:
 - Run scanning tools with default configurations
 - Analyze and document findings
 
+
+## ▶️ How to Run the Security Scans
+
+All security testing was performed in a **controlled lab environment** using intentionally vulnerable web applications.  
+No production or real-world systems were tested.
+
 ---
+
+### OWASP ZAP
+Used for automated vulnerability discovery and baseline testing.
+
+```bash
+zap.sh
+```
+
+**Steps:**
+- Configure browser proxy to `127.0.0.1:8080`
+- Spider the target application
+- Run Active Scan
+- Export scan results
+
+---
+
+### Nikto
+Used to identify server-side misconfigurations and insecure defaults.
+
+```bash
+nikto -h http://localhost:3000
+```
+
+---
+
+### Burp Suite (Community Edition)
+Used for manual validation and business logic testing.
+
+**Steps:**
+- Configure browser proxy (`127.0.0.1:8080`)
+- Intercept requests
+- Modify parameters using Repeater
+- Validate exploitability manually
+
+---
+
+### Nmap
+Used to identify exposed services and open ports.
+
+```bash
+nmap -sS -sV -Pn -T4 localhost
+```
+
 ## Future Improvements
 
 - Integrate SAST and dependency scanning (Snyk, Semgrep)
